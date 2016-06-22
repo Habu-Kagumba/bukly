@@ -17,6 +17,8 @@ group :development, :test do
   gem "coveralls", require: false
   gem "database_cleaner"
   gem "factory_girl_rails"
+  gem "guard", require: false
+  gem "guard-rspec", require: false
   gem "pry-rails"
   gem "rspec-rails"
   gem "rubycritic", require: false
