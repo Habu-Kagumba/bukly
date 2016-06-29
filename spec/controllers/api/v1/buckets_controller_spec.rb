@@ -63,7 +63,7 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
         allow(request).to receive(:headers).and_return(headers)
         expect do
           post :create, valid_attributes
-        end.to change{ Bucket.count }.by(1)
+        end.to change { Bucket.count }.by(1)
 
         expect(response).to be_created
         expect(json).to match_response_schema("bucket")
@@ -126,7 +126,7 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
         allow(request).to receive(:headers).and_return(headers)
         expect do
           delete :destroy, id: delete_bucket.id
-        end.to change{ Bucket.count }.by(-1)
+        end.to change { Bucket.count }.by(-1)
 
         expect(response).to have_http_status 204
       end

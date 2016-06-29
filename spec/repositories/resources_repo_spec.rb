@@ -45,13 +45,13 @@ RSpec.describe ResourcesRepo do
     it "deletes a bucket" do
       expect do
         repo.destroy_bucket(bucket.id)
-      end.to change{ repo.all_buckets.count }.by(-1)
+      end.to change { repo.all_buckets.count }.by(-1)
     end
 
     it "deletes an item" do
       expect do
         repo.destroy_item(bucket.items.last.id)
-      end.to change{ repo.all_items.count }.by(-1)
+      end.to change { repo.all_items.count }.by(-1)
     end
   end
 
@@ -59,14 +59,14 @@ RSpec.describe ResourcesRepo do
     it "creates a bucket" do
       expect do
         repo.create_bucket(params)
-      end.to change{ repo.all_buckets.count }.by(1)
+      end.to change { repo.all_buckets.count }.by(1)
     end
 
     it "creates an item" do
       expect do
         params[:done] = true
         repo.create_item(params)
-      end.to change{ repo.all_items.count }.by(1)
+      end.to change { repo.all_items.count }.by(1)
     end
   end
 
