@@ -8,5 +8,26 @@ RSpec.describe Bucket, type: :model do
       should be_valid
     end
     it { should validate_presence_of(:name) }
+    it { should have_many(:items) }
+  end
+
+  describe "Names scopes" do
+    it "paginates bucket results" do
+      create_list(:bucket, 20)
+      pager = {
+        limit: 14,
+        offset: 0
+      }
+
+      expect(Bucket.paginate(pager).count).to eql pager[:limit]
+    end
+
+    it "searches for matching buckets" do
+      datum = FFaker::CheesyLingo.title
+      search_bucket = create(:bucket, name: datum)
+      create_list(:bucket, 5)
+
+      expect(Bucket.search(datum)).to include search_bucket
+    end
   end
 end

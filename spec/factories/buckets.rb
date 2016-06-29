@@ -7,5 +7,13 @@ FactoryGirl.define do
         2.times { items << create(:item) }
       end
     end
+
+    factory :invalid_bucket do
+      name nil
+    end
+
+    factory :empty_bucket do
+      items []
+    end
   end
 end
