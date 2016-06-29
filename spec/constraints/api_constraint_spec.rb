@@ -4,9 +4,9 @@ RSpec.describe ApiConstraint do
   let(:request) { double :request }
 
   describe "#matches?" do
-    let(:version){ 1 }
+    let(:version) { 1 }
 
-    subject(:constraint){ described_class.new(version: version) }
+    subject(:constraint) { described_class.new(version: version) }
 
     def header_for_version(version)
       "version=#{version}"
@@ -20,7 +20,7 @@ RSpec.describe ApiConstraint do
     end
 
     it "does not match requests for other versions" do
-      headers = { accept: header_for_version(version+1) }
+      headers = { accept: header_for_version(version + 1) }
       allow(request).to receive(:headers).and_return(headers)
 
       expect(constraint.matches?(request)).to be_falsey

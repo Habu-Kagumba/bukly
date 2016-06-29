@@ -64,7 +64,7 @@ RSpec.describe ResourcesService do
     it "creates a bucket successfully" do
       expect do
         service_bucket.create_bucket(params_bucket)
-      end.to change{ Bucket.count }.by(1)
+      end.to change { Bucket.count }.by(1)
     end
 
     it "raises error if bucket has invalid attributes" do
@@ -78,7 +78,7 @@ RSpec.describe ResourcesService do
     it "creates an item successfully" do
       expect do
         service_item.create_item(params_item)
-      end.to change{ service_item.items.count }.by(1)
+      end.to change { service_item.items.count }.by(1)
     end
 
     it "raises error if item has invalid attributes" do
@@ -135,7 +135,7 @@ RSpec.describe ResourcesService do
     it "deletes a bucket successfully" do
       expect do
         service_bucket.destroy_bucket(create_bucket)
-      end.to change{ Bucket.count }.by(-1)
+      end.to change { Bucket.count }.by(-1)
     end
 
     it "raises error if bucket is not found" do
@@ -151,7 +151,7 @@ RSpec.describe ResourcesService do
     it "destroys an item successfully" do
       expect do
         service_item.destroy_item(item.id)
-      end.to change{ Item.count }.by(-1)
+      end.to change { Item.count }.by(-1)
     end
 
     it "raises error if item is not found" do

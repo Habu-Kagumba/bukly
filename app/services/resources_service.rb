@@ -25,7 +25,7 @@ class ResourcesService
   def items
     all = repo.all_items
     raise ExceptionHandlers::NoBucketsError,
-      ExceptionMessages::Messages.no_resources("items") if all.blank?
+          ExceptionMessages::Messages.no_resources("items") if all.blank?
     all
   end
 
@@ -68,8 +68,8 @@ class ResourcesService
   end
 
   def paginate_params(params)
-    limit = params[:limit].to_i or 20
-    page_limit = ( limit <= 0 or limit > 100 ) ? 20 : limit
+    (limit = params[:limit].to_i) || 20
+    page_limit = (limit <= 0 || limit > 100) ? 20 : limit
     offset = params[:page].to_i || 0
     { limit: page_limit, offset: offset }
   end

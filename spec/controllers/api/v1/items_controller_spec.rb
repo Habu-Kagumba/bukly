@@ -67,10 +67,10 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
     context "when an item is created with valid attributes" do
       it "creates the item successfully" do
         allow(request).to receive(:headers).and_return(headers)
-        param = valid_attributes.merge({ bucket_id: create_bucket.id })
+        param = valid_attributes.merge(bucket_id: create_bucket.id)
         expect do
           post :create, param
-        end.to change{ Item.count }.by(1)
+        end.to change { Item.count }.by(1)
         expect(response).to have_http_status 201
         expect(json).to match_response_schema("item")
         expect(json.fetch("name")).to eql param[:name]
@@ -80,10 +80,10 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
     context "when an item is created with invalid attributes" do
       it "should return avalidation error" do
         allow(request).to receive(:headers).and_return(headers)
-        param = invalid_attributes.merge({ bucket_id: create_bucket.id })
+        param = invalid_attributes.merge(bucket_id: create_bucket.id)
         expect do
           post :create, param
-        end.not_to change{ Item.count }
+        end.not_to change { Item.count }
         expect(json.fetch("errors")).to include "Name can't be blank"
       end
     end
@@ -96,10 +96,8 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
       it "updates the item successfully" do
         allow(request).to receive(:headers).and_return(headers)
         param = invalid_attributes.merge(
-          {
-            bucket_id: update_item.bucket.id,
-            id: update_item.id
-          }
+          bucket_id: update_item.bucket.id,
+          id: update_item.id
         )
         put :update, param
 
@@ -112,10 +110,8 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
       it "returns a not found error" do
         allow(request).to receive(:headers).and_return(headers)
         param = valid_attributes.merge(
-          {
-            bucket_id: update_item.bucket.id,
-            id: update_item.name
-          }
+          bucket_id: update_item.bucket.id,
+          id: update_item.name
         )
         put :update, param
 
@@ -155,7 +151,7 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
             id: delete_item.id
           }
           delete :destroy, param
-        end.to change{ Item.count }.by(-1)
+        end.to change { Item.count }.by(-1)
       end
     end
 
