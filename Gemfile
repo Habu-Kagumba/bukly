@@ -19,6 +19,7 @@ group :development, :test do
   gem "factory_girl_rails"
   gem "guard", require: false
   gem "guard-rspec", require: false
+  gem "json-schema"
   gem "pry-rails"
   gem "rspec-rails"
   gem "rubycritic", require: false

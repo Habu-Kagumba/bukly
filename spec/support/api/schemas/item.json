@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": ["id", "name", "date_created", "date_modified", "done"],
+  "properties": {
+    "id": { "type": "integer" },
+    "name": { "type": "string" },
+    "date_created": { "type": "string" },
+    "date_modified": { "type": "string" },
+    "done": { "type": "boolean" }
+  }
+}
