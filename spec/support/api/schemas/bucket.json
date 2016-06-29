@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": ["id", "name", "items", "date_created", "date_modified"],
+  "properties": {
+    "id": { "type": "integer" },
+    "name": { "type": "string" },
+    "items": { "type": "array" },
+    "date_created": { "type": "string" },
+    "date_modified": { "type": "string" }
+  }
+}

@@ -5,5 +5,5 @@ class Item < ActiveRecord::Base
             presence: true
 
   validates :done,
-            exclusion: { in: [nil] }
+            inclusion: { in: [true, false] }
 end
