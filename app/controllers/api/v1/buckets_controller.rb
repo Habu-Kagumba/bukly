@@ -10,7 +10,7 @@ module Api
       end
 
       def create
-        render_json(service.create_bucket(bucket_params), "created")
+        render_json(service.create_bucket(bucket_params), :created)
       end
 
       def update
@@ -26,7 +26,7 @@ module Api
       private
 
       def service
-        ResourcesService.new
+        ResourcesService.new(current_user)
       end
 
       def bucket_params

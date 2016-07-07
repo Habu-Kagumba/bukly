@@ -1,13 +1,14 @@
 require "rails_helper"
 
 RSpec.describe ResourcesService do
-  let(:bucket) { create(:bucket) }
-  let(:params_bucket) { attributes_for(:bucket) }
+  let(:user) { create(:user) }
+  let(:bucket) { create(:bucket, created_by: user.id) }
+  let(:params_bucket) { attributes_for(:bucket, created_by: user.id) }
   let(:params_item) { attributes_for(:item) }
-  let(:invalid_bucket) { attributes_for(:invalid_bucket) }
+  let(:invalid_bucket) { attributes_for(:invalid_bucket, created_by: user.id) }
   let(:invalid_item) { attributes_for(:invalid_item) }
-  subject(:service_bucket) { described_class.new }
-  subject(:service_item) { described_class.new(bucket.id) }
+  subject(:service_bucket) { described_class.new(user) }
+  subject(:service_item) { described_class.new(user, bucket.id) }
 
   describe "Get bucket resources" do
     it "gets the requested resource" do
@@ -21,7 +22,7 @@ RSpec.describe ResourcesService do
     end
 
     it "gets all the requested resources" do
-      create_list(:bucket, 10)
+      create_list(:bucket, 10, created_by: user.id)
       expect(service_bucket.buckets({}).to_json).to eql Bucket.all.to_json
     end
 
@@ -33,7 +34,7 @@ RSpec.describe ResourcesService do
   end
 
   describe "Get Item resources" do
-    let(:bucket) { create(:bucket) }
+    let(:bucket) { create(:bucket, created_by: user.id) }
 
     it "gets the requested resource" do
       expect(service_item.item(bucket.items.first.id)).to eql bucket.items.first
@@ -46,14 +47,14 @@ RSpec.describe ResourcesService do
     end
 
     it "gets all the requested resources" do
-      create_list(:bucket, 10)
+      create_list(:bucket, 10, created_by: user.id)
       expect(service_item.items.to_json).
         to eql Item.where(bucket_id: bucket.id).to_json
     end
 
     it "returns an error when resources don't exist" do
-      delete_bucket = create(:empty_bucket)
-      delete_service = described_class.new(delete_bucket.id)
+      delete_bucket = create(:empty_bucket, created_by: user.id)
+      delete_service = described_class.new(user, delete_bucket.id)
       expect do
         delete_service.items
       end.to raise_error ExceptionHandlers::NoBucketsError
@@ -96,7 +97,10 @@ RSpec.describe ResourcesService do
 
     it "raises error if bucket is not found" do
       expect do
-        service_bucket.update_bucket(build(:bucket), params_bucket)
+        service_bucket.update_bucket(
+          build(:bucket, created_by: user.id),
+          params_bucket
+        )
       end.to raise_error ActiveRecord::RecordNotFound
     end
 
@@ -129,8 +133,8 @@ RSpec.describe ResourcesService do
   end
 
   describe "Destroy bucket resources" do
-    let!(:create_bucket) { create(:bucket) }
-    let!(:build_bucket) { build(:bucket) }
+    let!(:create_bucket) { create(:bucket, created_by: user.id) }
+    let!(:build_bucket) { build(:bucket, created_by: user.id) }
 
     it "deletes a bucket successfully" do
       expect do

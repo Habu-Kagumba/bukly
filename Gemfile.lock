@@ -48,6 +48,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    bcrypt (3.1.11)
     brakeman (3.3.2)
     builder (3.2.2)
     codeclimate-engine-rb (0.3.1)
@@ -110,6 +111,7 @@ GEM
       addressable (~> 2.3)
     jsonapi (0.1.1.beta2)
       json (~> 1.8)
+    jwt (1.5.1)
     launchy (2.4.3)
       addressable (~> 2.3)
     listen (3.0.6)
@@ -244,6 +246,7 @@ GEM
       tins (~> 1.0)
     thor (0.19.1)
     thread_safe (0.3.5)
+    timecop (0.8.1)
     tins (1.6.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -258,6 +261,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  bcrypt
   brakeman
   coveralls
   database_cleaner
@@ -267,6 +271,7 @@ DEPENDENCIES
   guard
   guard-rspec
   json-schema
+  jwt
   oj
   oj_mimic_json
   pg
@@ -280,6 +285,7 @@ DEPENDENCIES
   shoulda-matchers
   simplecov
   spring
+  timecop
 
 RUBY VERSION
    ruby 2.3.0p0
