@@ -3,8 +3,10 @@ source "https://rubygems.org"
 ruby "2.3.0"
 
 gem "active_model_serializers"
+gem "bcrypt"
 gem "ffaker"
 gem "figaro"
+gem "jwt"
 gem "oj"
 gem "oj_mimic_json"
 gem "pg"
@@ -26,6 +28,7 @@ group :development, :test do
   gem "shoulda-matchers"
   gem "simplecov", require: false
   gem "spring"
+  gem "timecop"
 end
 
 group :production do

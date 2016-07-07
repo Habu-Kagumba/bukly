@@ -10,7 +10,7 @@ module Api
       end
 
       def create
-        render_json(service.create_item(item_params), "created")
+        render_json(service.create_item(item_params), :created)
       end
 
       def update
@@ -34,7 +34,7 @@ module Api
       end
 
       def service
-        ResourcesService.new(params[:bucket_id])
+        ResourcesService.new(current_user, params[:bucket_id])
       end
     end
   end

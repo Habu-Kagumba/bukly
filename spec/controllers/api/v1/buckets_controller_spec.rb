@@ -1,17 +1,28 @@
 require "rails_helper"
 
 RSpec.describe Api::V1::BucketsController, type: :controller do
+  let(:user) { create(:logged_in_user) }
+  let(:auth_token) { token(user) }
   let(:bucket) { create(:bucket) }
-  let(:headers) { { ACCEPT: "application/vnd.bukly+json; version=1" } }
   let(:valid_attributes) { attributes_for(:bucket) }
   let(:invalid_attributes) { attributes_for(:invalid_bucket) }
+  let(:headers) do
+    {
+      accept: "application/vnd.bukly+json; version=1",
+      authorization: auth_token
+    }
+  end
+
+  before do
+    request.headers["accept"] = headers.fetch(:accept)
+    request.headers["authorization"] = headers.fetch(:authorization)
+  end
 
   describe "Get all buckets" do
     context "when all buckets are retrieved" do
-      before { create_list(:bucket, 3) }
+      before { create_list(:bucket, 3, created_by: user.id) }
 
       it "returns all buckets" do
-        allow(request).to receive(:headers).and_return(headers)
         get :index
 
         expect(response).to be_success
@@ -21,7 +32,6 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
 
     context "when there are no bucketlists" do
       it "returns an error message" do
-        allow(request).to receive(:headers).and_return(headers)
         get :index
 
         expect(response).to be_success
@@ -32,11 +42,10 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
   end
 
   describe "Show a bucket" do
-    let!(:show_bucket) { create(:bucket) }
+    let!(:show_bucket) { create(:bucket, created_by: user.id) }
 
     context "when a user requests for a bucket" do
       it "returns the requested bucket" do
-        allow(request).to receive(:headers).and_return(headers)
         get :show, id: show_bucket.id
 
         expect(response).to be_success
@@ -47,7 +56,6 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
 
     context "when a non-existent bucket is requested" do
       it "returns an not found error" do
-        allow(request).to receive(:headers).and_return(headers)
         get :show, id: show_bucket.name
 
         expect(response).to be_not_found
@@ -60,7 +68,6 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
   describe "Create a bucket" do
     context "when a bucketlist is created with valid attributes" do
       it "creates the bucket successfully" do
-        allow(request).to receive(:headers).and_return(headers)
         expect do
           post :create, valid_attributes
         end.to change { Bucket.count }.by(1)
@@ -73,7 +80,6 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
 
     context "when a bucketlist is created with invalid attributes" do
       it "should return a validation error" do
-        allow(request).to receive(:headers).and_return(headers)
         post :create, invalid_attributes
 
         expect(response).to have_http_status 422
@@ -83,11 +89,10 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
   end
 
   describe "Update a bucket" do
-    let!(:update_bucket) { create(:bucket) }
+    let!(:update_bucket) { create(:bucket, created_by: user.id) }
 
     context "when a bucket is updated using valid attributes" do
       it "updates the bucket successfully" do
-        allow(request).to receive(:headers).and_return(headers)
         put :update, id: update_bucket.id, name: valid_attributes[:name]
 
         expect(response).to have_http_status 204
@@ -98,7 +103,6 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
 
     context "when a bucket is updated using invalid attributes" do
       it "returns a validation error" do
-        allow(request).to receive(:headers).and_return(headers)
         put :update, id: update_bucket.id, name: invalid_attributes[:name]
 
         expect(response).to have_http_status 422
@@ -108,7 +112,6 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
 
     context "when the bucket doesn't exist" do
       it "returns a not found error" do
-        allow(request).to receive(:headers).and_return(headers)
         put :update, id: update_bucket.name, name: valid_attributes[:name]
 
         expect(response).to be_not_found
@@ -119,11 +122,10 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
   end
 
   describe "Delete bucket" do
-    let!(:delete_bucket) { create(:bucket) }
+    let!(:delete_bucket) { create(:bucket, created_by: user.id) }
 
     context "when a bucket exists" do
       it "deletes successfully" do
-        allow(request).to receive(:headers).and_return(headers)
         expect do
           delete :destroy, id: delete_bucket.id
         end.to change { Bucket.count }.by(-1)
@@ -134,7 +136,6 @@ RSpec.describe Api::V1::BucketsController, type: :controller do
 
     context "when a bucket doesn't exist" do
       it "returns a not found error" do
-        allow(request).to receive(:headers).and_return(headers)
         delete :destroy, id: delete_bucket.name
 
         expect(response).to be_not_found
