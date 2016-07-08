@@ -1,6 +1,9 @@
 class ResourcesService
-  def initialize(bucket_id = nil)
+  attr_reader :user, :bucket_id
+
+  def initialize(user, bucket_id = nil)
     @bucket_id = bucket_id
+    @user = user
   end
 
   def bucket(bucket_id)
@@ -64,7 +67,7 @@ class ResourcesService
   private
 
   def repo
-    ResourcesRepo.new(@bucket_id)
+    ResourcesRepo.new(user, bucket_id)
   end
 
   def paginate_params(params)

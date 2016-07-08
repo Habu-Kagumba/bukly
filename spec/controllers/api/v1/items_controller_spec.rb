@@ -1,16 +1,28 @@
 require "rails_helper"
 
 RSpec.describe Api::V1::ItemsController, type: :controller do
+  let(:user) { create(:logged_in_user) }
+  let(:auth_token) { token(user) }
   let(:item) { create(:bucket_item) }
   let(:valid_attributes) { attributes_for(:bucket_item) }
   let(:invalid_attributes) { attributes_for(:invalid_item) }
-  let(:headers) { { accept: "application/vnd.bukly+json; version=1" } }
+  let(:headers) do
+    {
+      accept: "application/vnd.bukly+json; version=1",
+      authorization: auth_token
+    }
+  end
+
+  before do
+    request.headers["accept"] = headers.fetch(:accept)
+    request.headers["authorization"] = headers.fetch(:authorization)
+  end
 
   describe "Get all items" do
     context "when all items are retrieved" do
       it "returns all items" do
-        allow(request).to receive(:headers).and_return(headers)
-        test_item = create(:bucket_item)
+        test_bucket = create(:empty_bucket, created_by: user.id)
+        test_item = create(:item, bucket_id: test_bucket.id)
         param = { bucket_id: test_item.bucket.id }
         get :index, param
 
@@ -21,8 +33,7 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
     context "when there are no items" do
       it "returns a not found error" do
-        allow(request).to receive(:headers).and_return(headers)
-        test_bucket = create(:empty_bucket)
+        test_bucket = create(:empty_bucket, created_by: user.id)
         param = { bucket_id: test_bucket.id }
         get :index, param
 
@@ -34,11 +45,11 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
   end
 
   describe "Show an item" do
-    let!(:show_item) { create(:bucket_item) }
+    let!(:show_bucket) { create(:empty_bucket, created_by: user.id) }
+    let!(:show_item) { create(:item, bucket_id: show_bucket.id) }
 
     context "when a user requests for an item" do
       it "returns the requested item" do
-        allow(request).to receive(:headers).and_return(headers)
         param = { bucket_id: show_item.bucket.id, id: show_item.id }
         get :show, param
 
@@ -50,7 +61,6 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
     context "when a user requests for non-existent item" do
       it "returns a not found error" do
-        allow(request).to receive(:headers).and_return(headers)
         param = { bucket_id: show_item.bucket.id, id: show_item.name }
         get :show, param
 
@@ -62,11 +72,10 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
   end
 
   describe "Create item" do
-    let!(:create_bucket) { create(:empty_bucket) }
+    let!(:create_bucket) { create(:empty_bucket, created_by: user.id) }
 
     context "when an item is created with valid attributes" do
       it "creates the item successfully" do
-        allow(request).to receive(:headers).and_return(headers)
         param = valid_attributes.merge(bucket_id: create_bucket.id)
         expect do
           post :create, param
@@ -79,7 +88,6 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
     context "when an item is created with invalid attributes" do
       it "should return avalidation error" do
-        allow(request).to receive(:headers).and_return(headers)
         param = invalid_attributes.merge(bucket_id: create_bucket.id)
         expect do
           post :create, param
@@ -90,11 +98,11 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
   end
 
   describe "Update item" do
-    let!(:update_item) { create(:bucket_item) }
+    let!(:update_bucket) { create(:empty_bucket, created_by: user.id) }
+    let!(:update_item) { create(:item, bucket_id: update_bucket.id) }
 
     context "when an item is updated with invalid attributes" do
       it "updates the item successfully" do
-        allow(request).to receive(:headers).and_return(headers)
         param = invalid_attributes.merge(
           bucket_id: update_item.bucket.id,
           id: update_item.id
@@ -108,7 +116,6 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
     context "when the item doesn't exists" do
       it "returns a not found error" do
-        allow(request).to receive(:headers).and_return(headers)
         param = valid_attributes.merge(
           bucket_id: update_item.bucket.id,
           id: update_item.name
@@ -123,7 +130,6 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
     context "when an item is updated with valid attributes" do
       it "updates the item successsfully" do
-        allow(request).to receive(:headers).and_return(headers)
         param = {
           bucket_id: update_item.bucket.id,
           id: update_item.id,
@@ -140,11 +146,11 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
   end
 
   describe "Delete item" do
-    let!(:delete_item) { create(:bucket_item) }
+    let!(:delete_bucket) { create(:empty_bucket, created_by: user.id) }
+    let!(:delete_item) { create(:item, bucket_id: delete_bucket.id) }
 
     context "when the item exists" do
       it "deletes the item successfully" do
-        allow(request).to receive(:headers).and_return(headers)
         expect do
           param = {
             bucket_id: delete_item.bucket.id,
@@ -157,7 +163,6 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
     context "when the item doesn't exist" do
       it "returns a not found error" do
-        allow(request).to receive(:headers).and_return(headers)
         param = {
           bucket_id: delete_item.bucket.id,
           id: delete_item.name

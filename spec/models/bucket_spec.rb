@@ -9,6 +9,7 @@ RSpec.describe Bucket, type: :model do
     end
     it { should validate_presence_of(:name) }
     it { should have_many(:items) }
+    it { should belong_to(:user).with_foreign_key("created_by") }
   end
 
   describe "Names scopes" do

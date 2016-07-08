@@ -70,8 +70,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   # helper
-  config.include Requests::JsonHelpers, type: :controller
-  config.include Requests::JsonHelpers, type: :request
+  config.include Requests
 end
 
 Shoulda::Matchers.configure do |config|
