@@ -6,6 +6,7 @@
     "name": { "type": "string" },
     "items": { "type": "array" },
     "date_created": { "type": "string" },
-    "date_modified": { "type": "string" }
+    "date_modified": { "type": "string" },
+    "created_by": { "type": "integer" }
   }
 }

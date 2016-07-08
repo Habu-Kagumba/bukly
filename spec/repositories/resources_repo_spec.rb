@@ -1,13 +1,14 @@
 require "rails_helper"
 
 RSpec.describe ResourcesRepo do
-  let(:bucket) { create(:bucket) }
+  let(:user) { create(:user) }
+  let(:bucket) { create(:bucket, created_by: user.id) }
   let(:params) do
     {
       name: FFaker::CheesyLingo.title
     }
   end
-  subject(:repo) { described_class.new(bucket.id) }
+  subject(:repo) { described_class.new(user, bucket.id) }
 
   describe "Find" do
     it "finds a bucket" do
@@ -72,7 +73,7 @@ RSpec.describe ResourcesRepo do
 
   describe "Search" do
     it "searches for available buckets" do
-      create_list(:bucket, 10)
+      create_list(:bucket, 10, created_by: user.id)
 
       datum = repo.find_bucket(
         rand(repo.all_buckets.first.id..repo.all_buckets.last.id)).name
