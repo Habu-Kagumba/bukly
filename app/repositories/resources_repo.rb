@@ -15,7 +15,7 @@ class ResourcesRepo
   end
 
   def all_buckets
-    Bucket.all
+    Bucket.where(created_by: user.id)
   end
 
   def all_items
