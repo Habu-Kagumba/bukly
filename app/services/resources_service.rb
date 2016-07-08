@@ -1,9 +1,10 @@
 class ResourcesService
-  attr_reader :user, :bucket_id
+  attr_reader :user, :bucket_id, :req
 
-  def initialize(user, bucket_id = nil)
+  def initialize(user, bucket_id = nil, req = nil)
     @bucket_id = bucket_id
     @user = user
+    @req = req
   end
 
   def bucket(bucket_id)
@@ -18,8 +19,8 @@ class ResourcesService
     raise e, ExceptionMessages::Messages.no_resource("Item")
   end
 
-  def buckets(params)
-    all = search_buckets(params)
+  def buckets
+    all = search_buckets
     raise ExceptionHandlers::NoBucketsError, ExceptionMessages::Messages.
       no_resources("bucketlists") if all.blank?
     all
@@ -64,22 +65,23 @@ class ResourcesService
     repo.destroy_item(item_id)
   end
 
+  def page_headers
+    paginate.set_pagination_headers
+  end
+
   private
 
   def repo
     ResourcesRepo.new(user, bucket_id)
   end
 
-  def paginate_params(params)
-    (limit = params[:limit].to_i) || 20
-    page_limit = (limit <= 0 || limit > 100) ? 20 : limit
-    offset = params[:page].to_i || 0
-    { limit: page_limit, offset: offset }
+  def paginate
+    PaginationService.new(req, repo.all_buckets.count)
   end
 
-  def search_buckets(params)
-    datum = params[:q]
-    page_params = paginate_params(params)
+  def search_buckets
+    datum = req.query_parameters[:q]
+    page_params = paginate.paginate_params
 
     repo.search(datum, page_params)
   end

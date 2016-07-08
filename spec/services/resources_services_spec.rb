@@ -1,14 +1,14 @@
 require "rails_helper"
 
-RSpec.describe ResourcesService do
+RSpec.describe ResourcesService, type: :controller do
   let(:user) { create(:user) }
   let(:bucket) { create(:bucket, created_by: user.id) }
   let(:params_bucket) { attributes_for(:bucket, created_by: user.id) }
   let(:params_item) { attributes_for(:item) }
   let(:invalid_bucket) { attributes_for(:invalid_bucket, created_by: user.id) }
   let(:invalid_item) { attributes_for(:invalid_item) }
-  subject(:service_bucket) { described_class.new(user) }
-  subject(:service_item) { described_class.new(user, bucket.id) }
+  subject(:service_bucket) { described_class.new(user, nil, request) }
+  subject(:service_item) { described_class.new(user, bucket.id, request) }
 
   describe "Get bucket resources" do
     it "gets the requested resource" do
@@ -23,12 +23,12 @@ RSpec.describe ResourcesService do
 
     it "gets all the requested resources" do
       create_list(:bucket, 10, created_by: user.id)
-      expect(service_bucket.buckets({}).to_json).to eql Bucket.all.to_json
+      expect(service_bucket.buckets.to_json).to eql Bucket.all.to_json
     end
 
     it "returns an error when resources don't exist" do
       expect do
-        service_bucket.buckets({})
+        service_bucket.buckets
       end.to raise_error ExceptionHandlers::NoBucketsError
     end
   end
