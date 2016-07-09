@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe AuthenticationService do
   let(:user) { create(:user) }
+  let(:new_user_attrs) { attributes_for(:user) }
 
   describe "Authenticate user" do
     context "when the user exists" do
@@ -25,6 +26,36 @@ RSpec.describe AuthenticationService do
         expect do
           subject.login
         end.to raise_error ExceptionHandlers::AccessDeniedError
+      end
+    end
+
+    context "when a user signsup for a new account" do
+      subject do
+        described_class.new(
+          new_user_attrs[:email],
+          new_user_attrs[:password]
+        )
+      end
+
+      it "creates the user and logs the user in" do
+        expect do
+          subject.create_user
+        end.to change { User.count }.by(1)
+      end
+    end
+
+    context "when a user signsup with invalid parameters" do
+      subject do
+        described_class.new(
+          FFaker::Lorem.word,
+          new_user_attrs[:password]
+        )
+      end
+
+      it "return a validation error" do
+        expect do
+          subject.create_user
+        end.to raise_error ActiveRecord::RecordInvalid
       end
     end
   end
