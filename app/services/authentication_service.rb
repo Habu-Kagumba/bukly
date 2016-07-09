@@ -4,6 +4,13 @@ class AuthenticationService
     @password = password
   end
 
+  def create_user
+    User.create!(email: email, password: password)
+    login
+  rescue ActiveRecord::RecordInvalid
+    raise
+  end
+
   def login
     if user
       user.update_attribute(:logged_in, true)
