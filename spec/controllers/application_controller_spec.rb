@@ -13,7 +13,7 @@ RSpec.describe ApplicationController, type: :request do
   describe "Undefined endpoints" do
     context "when a user visits a non-existing endpoint" do
       it "responds with a 404 - not found error" do
-        route = FFaker::Lorem.word
+        route = Faker::Lorem.word
         get "/#{route}", {}, headers
 
         expect(response).to have_http_status 404

@@ -26,8 +26,9 @@ RSpec.describe ApiAuthorizeService do
     end
 
     it "raises error if token is incorrect" do
+      fake_token = Faker::Bitcoin.address
       expect do
-        service("Authorization" => FFaker::Guid.guid).authorize
+        service("Authorization" => fake_token).authorize
       end.to raise_error ExceptionHandlers::NotAuthenticatedError
     end
 

@@ -16,8 +16,8 @@ RSpec.describe AuthenticationService do
     context "when the user is anonymous" do
       subject do
         described_class.new(
-          FFaker::Internet.safe_email,
-          FFaker::Internet.password
+          Faker::Internet.safe_email,
+          Faker::Internet.password
         )
       end
 
@@ -46,7 +46,7 @@ RSpec.describe AuthenticationService do
     context "when a user signsup with invalid parameters" do
       subject do
         described_class.new(
-          FFaker::Lorem.word,
+          Faker::Lorem.word,
           new_user_attrs[:password]
         )
       end

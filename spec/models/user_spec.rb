@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  let(:email) { FFaker::Internet.safe_email }
+  let(:email) { Faker::Internet.safe_email }
   subject { create(:user, email: email.upcase) }
 
   describe "Model validation" do
@@ -13,8 +13,8 @@ RSpec.describe User, type: :model do
     it { should have_many(:buckets).with_foreign_key("created_by") }
     it do
       should_not allow_values(
-        FFaker::Internet.domain_name,
-        FFaker::Internet.domain_suffix
+        Faker::Internet.domain_word,
+        Faker::Internet.domain_suffix
       ).for(:email)
     end
     it "downcases emails" do

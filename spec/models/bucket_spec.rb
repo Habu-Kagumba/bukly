@@ -24,7 +24,7 @@ RSpec.describe Bucket, type: :model do
     end
 
     it "searches for matching buckets" do
-      datum = FFaker::CheesyLingo.title
+      datum = Faker::StarWars.character
       search_bucket = create(:bucket, name: datum)
       create_list(:bucket, 5)
 
