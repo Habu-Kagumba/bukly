@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe ApplicationController, type: :request do
-  let(:user) { create(:user, logged_in: true) }
+  let(:user) { create(:user) }
   let(:auth_token) { token(user) }
   let(:headers) do
     {

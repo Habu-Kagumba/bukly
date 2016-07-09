@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Api::V1::ItemsController, type: :controller do
-  let(:user) { create(:logged_in_user) }
+  let(:user) { create(:user) }
   let(:auth_token) { token(user) }
   let(:item) { create(:bucket_item) }
   let(:valid_attributes) { attributes_for(:bucket_item) }
