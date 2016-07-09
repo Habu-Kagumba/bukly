@@ -12,10 +12,7 @@ class AuthenticationService
   end
 
   def login
-    if user
-      user.update_attribute(:logged_in, true)
-      JsonWebToken.encode(user_id: user.id)
-    end
+    JsonWebToken.encode(user_id: user.id) if user
   end
 
   private
@@ -27,6 +24,6 @@ class AuthenticationService
     return user if user && user.authenticate(password)
 
     raise ExceptionHandlers::AccessDeniedError,
-          ExceptionMessages::Messages.access_denied
+      ExceptionMessages::Messages.access_denied
   end
 end

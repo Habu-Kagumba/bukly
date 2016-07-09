@@ -10,7 +10,6 @@ RSpec.describe AuthenticationService do
 
       it "Logs in a user" do
         subject.login
-        expect(User.find(user.id).logged_in).to be_truthy
       end
     end
 

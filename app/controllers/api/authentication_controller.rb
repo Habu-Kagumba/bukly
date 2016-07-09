@@ -11,7 +11,6 @@ module Api
     end
 
     def logout
-      current_user.update_attribute(:logged_in, false)
       @current_user = nil
 
       data = { message: ExceptionMessages::Messages.logged_out }
