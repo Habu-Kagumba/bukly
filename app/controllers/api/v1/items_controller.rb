@@ -34,7 +34,7 @@ module Api
       end
 
       def service
-        ResourcesService.new(current_user, params[:bucket_id])
+        ResourcesService.new(current_user, params[:bucket_id], request)
       end
     end
   end

@@ -1,8 +1,10 @@
 module Api
   module V1
     class BucketsController < ApplicationController
+      after_filter only: [:index] { set_pagination_headers }
+
       def index
-        render_json(service.buckets(params))
+        render_json(service.buckets)
       end
 
       def show
@@ -26,7 +28,7 @@ module Api
       private
 
       def service
-        ResourcesService.new(current_user)
+        ResourcesService.new(current_user, nil, request)
       end
 
       def bucket_params
@@ -35,6 +37,10 @@ module Api
 
       def get_bucket
         service.bucket(params[:id])
+      end
+
+      def set_pagination_headers
+        headers["Link"] = service.page_headers
       end
     end
   end
