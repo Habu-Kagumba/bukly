@@ -33,8 +33,8 @@ RSpec.describe Api::UsersController, type: :controller do
 
       it "returns validation error if params invalid" do
         param = {
-          email: FFaker::Lorem.word,
-          password: FFaker::Internet.password
+          email: Faker::Lorem.word,
+          password: Faker::Internet.password
         }
         post :create, param
 

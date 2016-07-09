@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :bucket do
-    name { FFaker::CheesyLingo.title }
+    name { Faker::Book.title }
     created_by 1
     items do
       [].tap do |items|

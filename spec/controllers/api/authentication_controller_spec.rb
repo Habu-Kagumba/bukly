@@ -22,8 +22,8 @@ RSpec.describe Api::AuthenticationController, type: :controller do
     context "When an anonymous user tries to login" do
       it "returns an error message" do
         err_param = {
-          email: FFaker::Internet.safe_email,
-          password: FFaker::Internet.password
+          email: Faker::Internet.safe_email,
+          password: Faker::Internet.password
         }
         post :login, err_param
 
