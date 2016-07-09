@@ -8,6 +8,9 @@ engines:
       - ruby
   brakeman:
     enabled: true
+    checks:
+      validation_regex:
+        enabled: false
 ratings:
   paths:
   - "**.rb"
