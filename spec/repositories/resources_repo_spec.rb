@@ -5,7 +5,7 @@ RSpec.describe ResourcesRepo do
   let(:bucket) { create(:bucket, created_by: user.id) }
   let(:params) do
     {
-      name: FFaker::CheesyLingo.title
+      name: Faker::StarWars.character
     }
   end
   subject(:repo) { described_class.new(user, bucket.id) }

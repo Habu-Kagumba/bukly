@@ -4,7 +4,7 @@ class ApiAuthorizeService
   end
 
   def authorize
-    user
+    { user: user, token: http_auth_header }
   end
 
   private
@@ -13,8 +13,6 @@ class ApiAuthorizeService
 
   def user
     @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token
-    raise ExceptionHandlers::NotAuthenticatedError,
-          ExceptionMessages::Messages.not_auth unless @user.logged_in
     @user
   end
 

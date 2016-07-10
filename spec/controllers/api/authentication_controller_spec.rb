@@ -22,8 +22,8 @@ RSpec.describe Api::AuthenticationController, type: :controller do
     context "When an anonymous user tries to login" do
       it "returns an error message" do
         err_param = {
-          email: FFaker::Internet.safe_email,
-          password: FFaker::Internet.password
+          email: Faker::Internet.safe_email,
+          password: Faker::Internet.password
         }
         post :login, err_param
 
@@ -54,6 +54,23 @@ RSpec.describe Api::AuthenticationController, type: :controller do
         expect(response).to be_success
         expect(json.fetch("message")).
           to eql ExceptionMessages::Messages.logged_out
+        expect(user.invalid_tokens.pluck(:token)).
+          to include headers[:authorization]
+      end
+    end
+
+    context "When a user is already logged out" do
+      before do
+        post :login, param
+        get :logout
+      end
+
+      it "returns an expired signature error message" do
+        get :logout
+
+        expect(response).to have_http_status 401
+        expect(json.fetch("errors")).
+          to eql ExceptionMessages::Messages.expired_sig
       end
     end
   end
