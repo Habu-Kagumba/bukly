@@ -24,6 +24,6 @@ class AuthenticationService
     return user if user && user.authenticate(password)
 
     raise ExceptionHandlers::AccessDeniedError,
-      ExceptionMessages::Messages.access_denied
+          ExceptionMessages::Messages.access_denied
   end
 end

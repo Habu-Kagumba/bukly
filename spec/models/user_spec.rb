@@ -11,6 +11,7 @@ RSpec.describe User, type: :model do
     it { should validate_presence_of(:email) }
     it { should validate_uniqueness_of(:email).case_insensitive }
     it { should have_many(:buckets).with_foreign_key("created_by") }
+    it { should have_many(:invalid_tokens) }
     it do
       should_not allow_values(
         Faker::Internet.domain_word,
