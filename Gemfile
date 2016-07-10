@@ -4,7 +4,7 @@ ruby "2.3.0"
 
 gem "active_model_serializers"
 gem "bcrypt"
-gem "ffaker"
+gem "faker"
 gem "figaro"
 gem "jwt"
 gem "oj"

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :item do
-    name { FFaker::Movie.title }
-    done { FFaker::Boolean.random }
+    name { Faker::StarWars.character }
+    done { Faker::Boolean.boolean }
 
     factory :invalid_item do
       name nil
