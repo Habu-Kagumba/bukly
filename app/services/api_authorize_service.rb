@@ -4,7 +4,7 @@ class ApiAuthorizeService
   end
 
   def authorize
-    user
+    { user: user, token: http_auth_header }
   end
 
   private

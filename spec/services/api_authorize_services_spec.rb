@@ -15,7 +15,7 @@ RSpec.describe ApiAuthorizeService do
 
   describe "Authorize user" do
     it "authorize user using the authorization header" do
-      expect(service(auth_headers(user)).authorize).
+      expect(service(auth_headers(user)).authorize[:user]).
         to eql user
     end
 
@@ -26,9 +26,8 @@ RSpec.describe ApiAuthorizeService do
     end
 
     it "raises error if token is incorrect" do
-      fake_token = Faker::Bitcoin.address
       expect do
-        service("Authorization" => fake_token).authorize
+        service("Authorization" => Faker::Bitcoin.address).authorize
       end.to raise_error ExceptionHandlers::NotAuthenticatedError
     end
 

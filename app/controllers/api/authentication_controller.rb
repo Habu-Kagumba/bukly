@@ -11,6 +11,7 @@ module Api
     end
 
     def logout
+      current_user.invalid_tokens.create!(token: token)
       @current_user = nil
 
       data = { message: ExceptionMessages::Messages.logged_out }
