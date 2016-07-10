@@ -4,7 +4,7 @@ module Api
 
     def create
       data = {
-        message: ExceptionMessages::Messages.logged_in,
+        message: ExceptionMessages::Messages.create_user,
         auth_token: auth_service.create_user
       }
       render_json(data, :created)
