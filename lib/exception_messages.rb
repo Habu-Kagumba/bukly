@@ -39,5 +39,9 @@ module ExceptionMessages
     def self.logged_out
       "Successfully logged out"
     end
+
+    def self.create_user
+      "Successfully created user."
+    end
   end
 end
