@@ -43,5 +43,9 @@ module ExceptionMessages
     def self.create_user
       "Successfully created user."
     end
+
+    def self.user_not_found
+      "User not found!"
+    end
   end
 end

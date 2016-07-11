@@ -15,6 +15,10 @@ class AuthenticationService
     JsonWebToken.encode(user_id: user.id) if user
   end
 
+  def logout(curr_user, token)
+    curr_user.invalid_tokens.create!(token: token)
+  end
+
   private
 
   attr_accessor :email, :password

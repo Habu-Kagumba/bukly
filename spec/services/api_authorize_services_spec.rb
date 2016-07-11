@@ -31,6 +31,12 @@ RSpec.describe ApiAuthorizeService do
       end.to raise_error ExceptionHandlers::NotAuthenticatedError
     end
 
+    it "raises error if user non-existent" do
+      expect do
+        service(auth_headers(build(:user))).authorize
+      end.to raise_error ExceptionHandlers::UserNotFoundError
+    end
+
     it "raises an error when token is expired" do
       Timecop.travel(2.month.from_now)
 
