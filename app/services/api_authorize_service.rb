@@ -13,7 +13,9 @@ class ApiAuthorizeService
 
   def user
     @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token
-    @user
+  rescue ActiveRecord::RecordNotFound
+    raise ExceptionHandlers::UserNotFoundError,
+          ExceptionMessages::Messages.user_not_found
   end
 
   def decoded_auth_token
