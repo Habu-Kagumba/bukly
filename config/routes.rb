@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root "static#home"
   scope module: :api, defaults: { format: :json } do
     post "auth/login", to: "authentication#login"
     get "auth/logout", to: "authentication#logout"
@@ -12,7 +13,7 @@ Rails.application.routes.draw do
     end
   end
   match "*all",
-        to: "application#not_found",
-        defaults: { format: :json },
-        via: :all
+    to: "application#not_found",
+    defaults: { format: :json },
+    via: :all
 end
