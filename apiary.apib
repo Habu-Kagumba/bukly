@@ -1,80 +1,647 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://bukly.herokuapp.com
 
-# Buckly
+# Bukly
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Keep track of your life goals conviniently with **Bukly**, a bucket list API.
 
-## Questions Collection [/questions]
+**Documentation** - [bukly.herokuapp.com](http://docs.bukly.apiary.io).
 
-### List All Questions [GET]
+**Source code** - [github.com/andela-hkagumba/bukly](https://github.com/andela-hkagumba/bukly).
 
-+ Response 200 (application/json)
+**Bukly** is a restful and versioned API and all interactions will be defined
+using basic HTTP verbs.
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+All calls to the API should include the header,
 
-### Create a New Question [POST]
+```sh
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+    Accept: application/vnd.bukly+json; version=1
+
+```
+
+Failure to which the API will return the error,
+
+```sh
+HTTP/1.1 404 Not Found
+Cache-Control: no-cache
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Request-Id: 8110f2cf-9529-4bf1-b299-f318cbaacf56
+X-Runtime: 0.038873
+X-XSS-Protection: 1; mode=block
+
+{
+    "errors": "Invalid route, please refer to the API docs for available routes"
+}
+
+```
+
+All endpoints except for `/signup` and `/auth/login` require the `Authorization` header.
+
+```sh
+
+    Authorization: auth_token_string
+
+```
+
+Failure to which the API will return the error,
+
+```sh
+
+HTTP/1.1 401 Unauthorized
+Cache-Control: no-cache
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Request-Id: 15460395-2448-4817-85e2-b402318842fd
+X-Runtime: 0.082715
+X-XSS-Protection: 1; mode=block
+
+{
+    "errors": "Access Denied. Missing token"
+}
+
+```
+
+## Group Users
+
+User management resources.
+
+### Signup [/signup]
+
+You may create a new user using this action. It takes a JSON object containing an email
+address and a password.
+The created user is immediately logged into the application.
+
+### Signup a user [POST]
+
 
 + Request (application/json)
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
     + Headers
 
-            Location: /questions/2
+            Accept: application/vnd.bukly+json; version=1
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "email": "habu@kagumba.com",
+                "password": "xxx"
+            }
+
++ Response 201 (application/json)
+
+        {
+            "auth_token": "token_string",
+            "message": "Successfully created user."
+        }
+
++ Response 422 (application/json)
+
+        {
+            "errors": "Validation Failed"
+        }
+
+### Login [/auth/login]
+
+An existing user can be authenticated using this endpoint. It takes a JSON object containing
+an email address and a password. The response is the authentication token and a success messsage.
+
+### Login a user [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+
+    + Body
+
+            {
+                "email": "habu@kagumba.com",
+                "password": "xxx"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "auth_token": "token_string",
+            "message": "Successfully logged in"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "errors": "Access denied. Invalid Credentials"
+        }
+
+### Logout [/auth/logout]
+
+Logout an logged in user. The response is a success message.
+
+### Logout a user [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
++ Response 200 (application/json)
+
+        {
+                "message": "Successfully logged out"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "errors": "Access Denied. Invalid credentials"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "errors": "Authentication failed. Expired token"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "errors": "User not found!"
+        }
+
+## Group Bucketlist
+
+Bucketlist resources.
+
+### Bucketlist Collection [/bucketlists?page={page}&limit={limit}]
+
+Bucketlists owned by a particular user.
+
+Optional query parameters:
+
+- `page` default is page 1.
+- `limit` minimum is 20 and maximum 100 bucketlists
+
++ Parameters
+
+    + page (optional, int) - desired page of results
+        + Default: 1
+    + limit (optional, int) - the number of bucketlists per page result
+        + Default: 20
+
+### List all Bucketlists [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: <https://bukly.herokuapp.com/bucketlists?page=1>; rel="first", <https://bukly.herokuapp.com?page=2>; rel="next", <https://bukly.herokuapp.com?page=2>; rel="last"
+
+    + Body
+
+            [
+                {
+                    "created_by": 1,
+                    "date_created": "2016-07-11 16:43:31",
+                    "date_modified": "2016-07-11 16:43:31",
+                    "id": 1,
+                    "items": [
+                        {
+                            "date_created": "2016-07-11 16:43:31",
+                            "date_modified": "2016-07-11 16:43:31",
+                            "done": false,
+                            "id": 1,
+                            "name": "Borvo the Hutt"
+                        },
+                        {
+                            "date_created": "2016-07-11 16:43:31",
+                            "date_modified": "2016-07-11 16:43:31",
+                            "done": true,
+                            "id": 2,
+                            "name": "Panaka"
+                        }
+                    ],
+                    "name": "The Grapes of Wrath"
+                },
+                {
+                    "created_by": 1,
+                    "date_created": "2016-07-11 14:06:48",
+                    "date_modified": "2016-07-11 14:06:48",
+                    "id": 2,
+                    "items": [
+                        {
+                            "date_created": "2016-07-11 14:06:48",
+                            "date_modified": "2016-07-11 14:06:48",
+                            "done": true,
+                            "id": 3,
+                            "name": "Panaka"
+                        },
+                        {
+                            "date_created": "2016-07-11 14:06:48",
+                            "date_modified": "2016-07-11 14:06:48",
+                            "done": true,
+                            "id": 4,
+                            "name": "Count Dooku"
+                        }
+                    ],
+                    "name": "The Widening Gyre"
+                }
+            ]
+
++ Response 200 (application/json)
+
+        {
+            "errors": "No bucketlists found"
+        }
+
+### Search Bucketlists [GET /bucketlists?q={q}]
+
++ Parameters
+
+    + q (optional, string) - query search string
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: <https://bukly.herokuapp.com/bucketlists?page=1&q=Gyre>; rel="first", <https://bukly.herokuapp.com?page=1&q=Gyre>; rel="last"
+
+    + Body
+
+            [
+                {
+                    "created_by": 1,
+                    "date_created": "2016-07-11 16:43:31",
+                    "date_modified": "2016-07-11 16:43:31",
+                    "id": 2,
+                    "items": [
+                        {
+                            "date_created": "2016-07-11 16:43:31",
+                            "date_modified": "2016-07-11 16:43:31",
+                            "done": false,
+                            "id": 4,
+                            "name": "Panaka"
+                        },
+                        {
+                            "date_created": "2016-07-11 16:43:31",
+                            "date_modified": "2016-07-11 16:43:31",
+                            "done": true,
+                            "id": 5,
+                            "name": "Obi-Wan Kenobi"
+                        }
+                    ],
+                    "name": "The Widening Gyre"
+                }
+            ]
+
++ Response 200 (application/json)
+
+        {
+            "errors": "No bucketlists found"
+        }
+
+### Bucketlist [/bucketlists/{id}]
+
+This is the endpoint for a single Bucketlist object.
+
+Required attributes:
+
+- `id` - Automatically assigned
+
++ Parameters
+
+    + id (required, int) - Unique Bucketlist ID.
+
++ Model (application/json)
+
+    + Body
+
+            {
+                "created_by": 1,
+                "date_created": "2016-07-11 16:43:31",
+                "date_modified": "2016-07-11 16:43:31",
+                "id": 2,
+                "items": [
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
+                        "date_created": "2016-07-11 16:43:31",
+                        "date_modified": "2016-07-11 16:43:31",
+                        "done": false,
+                        "id": 3,
+                        "name": "Panaka"
+                    },
+                    {
+                        "date_created": "2016-07-11 16:43:31",
+                        "date_modified": "2016-07-11 16:43:31",
+                        "done": true,
+                        "id": 4,
+                        "name": "Obi-Wan Kenobi"
                     }
-                ]
+                ],
+                "name": "The Widening Gyre"
+            }
+
+## Get a single Bucketlist [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
++ Response 200
+
+    [Bucketlist][]
+
++ Response 404
+
+        {
+            "errors": "No bucketlists found"
+        }
+
+## Edit a Bucketlist [PUT]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
+    + Body
+
+            {
+                "name": "New name"
+            }
+
++ Response 204
+
++ Response 404
+
+            {
+                "errors": "Bucket not found"
+            }
+
++ Response 422
+
+            {
+                "errors": "Validation error."
+            }
+
+## Delete a Bucketlist [DELETE]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
+    + Body
+
+            {
+                "name": "New name"
+            }
+
++ Response 204
+
++ Response 404
+
+            {
+                "errors": "Bucket not found"
+            }
+
+## Create a Bucketlist [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
+    + Body
+
+            {
+                "name": "New name",
+                "created_by": 1
+            }
+
++ Response 201
+
+        {
+            "created_by": 1,
+            "date_created": "2016-07-12 08:04:38",
+            "date_modified": "2016-07-12 08:04:38",
+            "id": 1,
+            "items": [],
+            "name": "New name"
+        }
+
++ Response 422
+
+            {
+                "errors": "Validation error."
+            }
+
+## Group Items
+
+Item resources.
+
+### Item Collection [/bucketlists/{id}/items]
+
+Items that belong to a Bucketlist.
+
+Required query parameters:
+
+- `id` The bucketlist ID
+
++ Parameters
+
+    + id (required, int) - The Bucketlist ID
+
+### List all Items [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "date_created": "2016-07-12 08:15:55",
+                    "date_modified": "2016-07-12 08:15:55",
+                    "done": true,
+                    "id": 41,
+                    "name": "Mace Windu"
+                },
+                {
+                    "date_created": "2016-07-12 08:15:55",
+                    "date_modified": "2016-07-12 08:15:55",
+                    "done": true,
+                    "id": 42,
+                    "name": "Ki-Adi-Mundi"
+                }
+            ]
+
+
++ Response 200 (application/json)
+
+        {
+            "errors": "No items found"
+        }
+
+### Item [/bucketlists/{bucket_id}/items/{id}]
+
+This is the endpoint for a single Item object.
+
+Required attributes:
+
+- `bucket_id` - Bucketlist ID
+- `id` - Automatically assigned
+
++ Parameters
+
+    + bucket_id (required, int) - Bucketlist ID
+    + id (required, int) - Unique Item ID.
+
++ Model (application/json)
+
+    + Body
+
+            {
+                "date_created": "2016-07-11 16:43:31",
+                "date_modified": "2016-07-11 16:43:31",
+                "done": false,
+                "id": 3,
+                "name": "Panaka"
+            }
+
+## Get a single Item [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
++ Response 200
+
+    [Item][]
+
++ Response 404
+
+        {
+            "errors": "No items found"
+        }
+
+## Edit a Item [PUT]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
+    + Body
+
+            {
+                "name": "New name"
+            }
+
++ Response 204
+
++ Response 404
+
+            {
+                "errors": "Item not found"
+            }
+
++ Response 422
+
+            {
+                "errors": "Validation error."
+            }
+
+## Delete a Item [DELETE]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
+    + Body
+
+            {
+                "name": "New name"
+            }
+
++ Response 204
+
++ Response 404
+
+            {
+                "errors": "Item not found"
+            }
+
+## Create a Item [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.bukly+json; version=1
+            Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE0NzA5MDM2ODd9.3oL49tos4ukGUXI2_hIN9nQ_rOQnjZnxtzf4KW7NgFc
+
+    + Body
+
+            {
+                "name": "New name"
+            }
+
++ Response 201
+
+        {
+            "date_created": "2016-07-12 08:26:24",
+            "date_modified": "2016-07-12 08:26:24",
+            "done": false,
+            "id": 61,
+            "name": "New name"
+        }
+
++ Response 422
+
+            {
+                "errors": "Validation error."
             }
