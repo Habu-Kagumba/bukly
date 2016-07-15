@@ -23,6 +23,7 @@ group :development, :test do
   gem "guard-rspec", require: false
   gem "json-schema"
   gem "pry-rails"
+  gem "rspec-its"
   gem "rspec-rails"
   gem "rubycritic", require: false
   gem "shoulda-matchers"
