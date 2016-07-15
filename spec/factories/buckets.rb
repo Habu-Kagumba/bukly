@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :bucket do
     name { Faker::Book.title }
-    created_by 1
+    created_by nil
     items do
       [].tap do |items|
         2.times { items << create(:item) }
