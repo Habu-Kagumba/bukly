@@ -1,0 +1,34 @@
+require "rails_helper"
+
+RSpec.describe "PUT /bucketlists/:bucket_id/items/:id", type: :request do
+  let(:user) { create(:user) }
+  let(:item) { create(:bucket_item, created_by: user.id) }
+  let(:bucket_id) { item.bucket.id }
+  let(:id) { item.id }
+  let(:attrs) { attributes_for(:bucket_item, created_by: user.id) }
+
+  let!(:req) do
+    put "/bucketlists/#{bucket_id}/items/#{id}", attrs, auth_headers
+  end
+  subject { response }
+
+  context "when a bucket has valid attributes" do
+    it_behaves_like "api_response", 204
+    it "updates the bucketlist" do
+      expect(Item.find(id).name).to eql attrs[:name]
+    end
+  end
+
+  context "when a bucket has invalid attributes" do
+    let(:attrs) { attributes_for(:invalid_item, created_by: user.id) }
+
+    it_behaves_like "api_response", 422, "errors"
+  end
+
+  context "when a bucket desn't exist" do
+    let(:id) { item.id.next }
+
+    it_behaves_like "api_response", 404, "errors"
+    it_behaves_like "response_message", "errors", "no_resource", "Item"
+  end
+end
