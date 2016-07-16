@@ -40,17 +40,25 @@ class PaginationService
 
   def page
     page = req_params.fetch(:page, 1).to_i
-    page == 0 ? 1 : page
+    page = 1 if page == 0
+    page
   end
 
   def limit
     limit = req_params.fetch(:limit, 20).to_i
-    page_limit = (limit <= 0 || limit > 100) ? 20 : limit
-    page_limit
+    limit = 20 if limit <= 0 || limit > 100
+    limit
+  end
+
+  def buckets_size
+    if count == 0
+      1
+    else
+      count
+    end
   end
 
   def link_params
-    buckets_size = count == 0 ? 1 : count
     pages = buckets_size.fdiv(limit).ceil
     pager = {}
     pager[:first] = 1
