@@ -22,7 +22,7 @@ RSpec.describe "PUT /bucketlists/:id", type: :request do
     it_behaves_like "api_response", 422, "errors"
   end
 
-  context "when a bucket desn't exist" do
+  context "when a bucket doesn't exist" do
     let(:id) { bucket.id.next }
 
     it_behaves_like "api_response", 404, "errors"
