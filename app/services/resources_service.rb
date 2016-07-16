@@ -66,7 +66,7 @@ class ResourcesService
   end
 
   def page_headers
-    paginate.set_pagination_headers
+    PaginationService.new(req, repo.all_buckets.count).set_pagination_headers
   end
 
   private
@@ -75,13 +75,10 @@ class ResourcesService
     ResourcesRepo.new(user, bucket_id)
   end
 
-  def paginate
-    PaginationService.new(req, repo.all_buckets.count)
-  end
-
   def search_buckets
     datum = req.query_parameters[:q]
-    page_params = paginate.paginate_params
+    page_params = PaginationService.new(req, repo.all_buckets.count).
+                  paginate_params
 
     repo.search(datum, page_params)
   end
