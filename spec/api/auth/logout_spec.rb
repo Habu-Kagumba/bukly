@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "POST /auth/logout", type: :request do
+RSpec.describe "GET /auth/logout", type: :request do
   let(:user) { create(:user) }
   let(:attrs) do
     {
