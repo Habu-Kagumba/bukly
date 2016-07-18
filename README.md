@@ -2,7 +2,7 @@
     <a href="http://bukly.herokuapp.com"><img src="https://res.cloudinary.com/habu-kagumba/image/upload/v1467210107/bukly_oemne0.svg" alt="Bubkly" width="200"></a>
 </div>
 
-[![Build Status](https://travis-ci.org/andela-hkagumba/bukly.svg?branch=master)](https://travis-ci.org/andela-hkagumba/bukly) [![Coverage Status](https://coveralls.io/repos/github/andela-hkagumba/bukly/badge.svg?branch=master)](https://coveralls.io/github/andela-hkagumba/bukly?branch=master) [![Code Climate](https://codeclimate.com/github/andela-hkagumba/bukly/badges/gpa.svg)](https://codeclimate.com/github/andela-hkagumba/bukly)
+[![Build Status](https://travis-ci.org/andela-hkagumba/bukly.svg?branch=master)](https://travis-ci.org/andela-hkagumba/bukly) [![Coverage Status](https://coveralls.io/repos/github/andela-hkagumba/bukly/badge.svg?branch=master)](https://coveralls.io/github/andela-hkagumba/bukly?branch=master) [![Code Climate](https://codeclimate.com/github/andela-hkagumba/bukly/badges/gpa.svg)](https://codeclimate.com/github/andela-hkagumba/bukly) [![codebeat badge](https://codebeat.co/badges/f8d85a5f-20bd-4d97-ace7-13649a7e1ec7)](https://codebeat.co/projects/github-com-andela-hkagumba-bukly)
 
 # Bukly
 
@@ -114,6 +114,10 @@ X-XSS-Protection: 1; mode=block
 }
 
 ```
+
+### API limitations
+
+None
 
 ## The API Endpoints
 
