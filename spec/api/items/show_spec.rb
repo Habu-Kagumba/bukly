@@ -16,7 +16,7 @@ RSpec.describe "GET /bucketlists/:bucket_id/items/:id", type: :request do
     end
   end
 
-  context "when the user retrieves a non-existent bucketlist" do
+  context "when the user retrieves a non-existent bucketlist item" do
     let(:id) { item.id.next }
 
     it_behaves_like "api_response", 404, "errors"
