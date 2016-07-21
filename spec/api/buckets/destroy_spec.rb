@@ -4,8 +4,9 @@ RSpec.describe "DELETE /bucketlists/:id", type: :request do
   let(:user) { create(:user) }
   let!(:bucket) { create(:bucket, created_by: user.id) }
   let(:id) { bucket.id }
+  let(:header) { auth_headers }
 
-  let!(:req) { delete "/bucketlists/#{id}", {}, auth_headers }
+  let!(:req) { delete "/bucketlists/#{id}", {}, header }
   subject { response }
 
   context "when the bucket exists" do
@@ -17,5 +18,11 @@ RSpec.describe "DELETE /bucketlists/:id", type: :request do
 
     it_behaves_like "api_response", 404, "errors"
     it_behaves_like "response_message", "errors", "no_resource", "Bucket"
+  end
+
+  context "when an authorization token is not passed" do
+    let(:header) { headers }
+    it_behaves_like "api_response", 401, "errors"
+    it_behaves_like "response_message", "errors", "missing_token"
   end
 end
