@@ -2,7 +2,7 @@
     <a href="http://bukly.herokuapp.com"><img src="https://res.cloudinary.com/habu-kagumba/image/upload/v1467210107/bukly_oemne0.svg" alt="Bubkly" width="200"></a>
 </div>
 
-[![Build Status](https://travis-ci.org/andela-hkagumba/bukly.svg?branch=master)](https://travis-ci.org/andela-hkagumba/bukly) [![Coverage Status](https://coveralls.io/repos/github/andela-hkagumba/bukly/badge.svg?branch=master)](https://coveralls.io/github/andela-hkagumba/bukly?branch=master) [![Code Climate](https://codeclimate.com/github/andela-hkagumba/bukly/badges/gpa.svg)](https://codeclimate.com/github/andela-hkagumba/bukly) [![codebeat badge](https://codebeat.co/badges/f8d85a5f-20bd-4d97-ace7-13649a7e1ec7)](https://codebeat.co/projects/github-com-andela-hkagumba-bukly)
+[![Build Status](https://travis-ci.org/Habu-Kagumba/bukly.svg?branch=master)](https://travis-ci.org/Habu-Kagumba/bukly) [![Coverage Status](https://coveralls.io/repos/github/andela-hkagumba/bukly/badge.svg?branch=master)](https://coveralls.io/github/andela-hkagumba/bukly?branch=master) [![Code Climate](https://codeclimate.com/github/andela-hkagumba/bukly/badges/gpa.svg)](https://codeclimate.com/github/andela-hkagumba/bukly) [![codebeat badge](https://codebeat.co/badges/f8d85a5f-20bd-4d97-ace7-13649a7e1ec7)](https://codebeat.co/projects/github-com-andela-hkagumba-bukly)
 
 # Bukly
 
@@ -10,7 +10,7 @@ Keep track of your life goals conviniently with **Bukly**, a *bucket list* API.
 
 **Documentation** - [bukly.herokuapp.com](http://bukly.herokuapp.com).
 
-**Source code** - [github.com/andela-hkagumba/bukly](https://github.com/andela-hkagumba/bukly).
+**Source code** - [github.com/Habu-Kagumba/bukly](https://github.com/Habu-Kagumba/bukly).
 
 # Running the application
 
@@ -29,7 +29,7 @@ You need to install the following:
 Clone the application to your local machine:
 
 ```
-$ git clone https://github.com/andela-hkagumba/bukly.git
+$ git clone https://github.com/Habu-Kagumba/bukly.git
 ```
 
 Install the dependencies
